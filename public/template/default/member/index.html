@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Cable-member</title>
+    <script src="/{$Think.Config.template.view_path}assets/js/vue.js"></script>
+    <link rel="stylesheet" href="/{$Think.Config.template.view_path}assets/css/antd.min.css">
+    <script src="/{$Think.Config.template.view_path}assets/js/antd.min.js"></script>
+</head>
+<body>
+<div id="app">
+    <div>
+        <a-menu mode="horizontal" v-model="nav.current">
+            <a-menu-item key="bill" @click="switch_section('messages')" style="border-right: 1px solid #eee;">
+                <a-icon type="snippets"/></a-icon>票据
+            </a-menu-item>
+        </a-menu>
+    </div>
+
+</div>
+</body>
+<script>
+    var app = new Vue({
+        el: "#app",
+        data() {
+            return {
+                nav:{
+                    current: ['bill']
+                },
+            }
+        },
+        //初始化
+        mounted() {
+        },
+        //方法
+        methods: {
+
+        },
+    })
+</script>
+<style>
+    body{
+        overflow: hidden;
+    }
+    .main-iframe {
+        border: 0;
+        padding: 0;
+        margin: 0;
+        height: calc(100vh - 46px);
+        overflow: hidden;
+    }
+</style>
+</html>
