@@ -9,14 +9,24 @@
 </head>
 <body>
 <div id="app">
-    <div>
-        <a-menu mode="horizontal" v-model="nav.current">
-            <a-menu-item key="bill" @click="switch_section('messages')" style="border-right: 1px solid #eee;">
-                <a-icon type="snippets"/></a-icon>票据
-            </a-menu-item>
-        </a-menu>
-    </div>
-
+    <a-layout id="components-layout-demo-custom-trigger">
+        <a-layout-sider :trigger="null" collapsible v-model="collapsed" style="background: rgb(255,255,255)">
+            <div class="logo"></div>
+            <a-menu theme="light" mode="inline" :default-selected-keys="['1']" @open-change="onOpenChange">
+                    <a-menu-item key="1"><a-icon type="user"></a-icon><span>用户中心</span></a-menu-item>
+                    <a-menu-item key="2"><a-icon type="book"></a-icon><span>关键词查看</span></a-menu-item>
+                    <a-menu-item key="3"><a-icon type="book"></a-icon><span>关键词管理</span></a-menu-item>
+            </a-menu>
+        </a-layout-sider>
+        <a-layout>
+            <a-layout-header style="background: #fff; padding: 0">
+                <a-icon class="trigger" :type="collapsed ? 'menu-unfold' : 'menu-fold'" @click="()=> collapsed = !collapsed"/>
+            </a-layout-header>
+            <a-layout-content :style="{ margin: '24px 16px', padding: '24px', background: '#fff', minHeight: '280px' }">
+                Content
+            </a-layout-content>
+        </a-layout>
+    </a-layout>
 </div>
 </body>
 <script>
@@ -24,6 +34,9 @@
         el: "#app",
         data() {
             return {
+                rootSubmenuKeys: ['sub1', 'sub2', 'sub3'],
+                openKeys: ['sub1'],
+                collapsed: false,
                 nav:{
                     current: ['bill']
                 },
@@ -34,19 +47,61 @@
         },
         //方法
         methods: {
-
+            onOpenChange (openKeys) {
+                console.log("1");
+                const latestOpenKey = openKeys.find(key => this.openKeys.indexOf(key) === -1)
+                if (this.rootSubmenuKeys.indexOf(latestOpenKey) === -1) {
+                    this.openKeys = openKeys
+                } else {
+                    this.openKeys = latestOpenKey ? [latestOpenKey] : []
+                }
+            },
         },
     })
 </script>
 <style>
-    body{
-        overflow: hidden;
+    #components-layout-demo-custom-trigger .trigger {
+        font-size: 18px;
+        line-height: 64px;
+        padding: 0 24px;
+        cursor: pointer;
+        transition: color .3s;
     }
-    .main-iframe {
-        border: 0;
-        padding: 0;
-        margin: 0;
-        height: calc(100vh - 46px);
+
+    #components-layout-demo-custom-trigger .trigger:hover {
+        color: #1890ff;
+    }
+
+    #components-layout-demo-custom-trigger .logo {
+        height: 32px;
+        background: rgba(255,255,255,.2);
+        margin: 16px;
+    }
+</style>
+<style>
+    #components-layout-demo-custom-trigger .trigger {
+        font-size: 18px;
+        line-height: 64px;
+        padding: 0 24px;
+        cursor: pointer;
+        transition: color .3s;
+    }
+
+    #components-layout-demo-custom-trigger .trigger:hover {
+        color: #1890ff;
+    }
+
+    #components-layout-demo-custom-trigger .logo {
+        height: 32px;
+        background: rgba(255,255,255,.2);
+        margin: 16px;
+    }
+    #components-layout-demo-custom-trigger {
+        height: 100vh;
+    }
+</style>
+<style>
+    body{
         overflow: hidden;
     }
 </style>
