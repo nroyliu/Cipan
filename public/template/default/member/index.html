@@ -12,9 +12,9 @@
 <div id="app">
     <a-layout id="components-layout-demo-custom-trigger">
         <a-layout-sider :trigger="null" collapsible v-model="collapsed" style="background: rgb(255,255,255)">
-            <div class="logo"></div>
+            <div class="logo" style="line-height: 32px;font-size:20px;text-align: center"><h3>词盘</h3></div>
             <a-menu theme="light" mode="inline" :default-selected-keys="['1']">
-                    <a-menu-item key="1" @click="switch_page('/member/account/index')"><a-icon type="user"></a-icon><span>用户中心</span></a-menu-item>
+                    <a-menu-item key="1" @click="switch_page('/member/account/home')"><a-icon type="user"></a-icon><span>用户中心</span></a-menu-item>
                     <a-menu-item key="2" @click="switch_page('/member/keyword/getlist')"><a-icon type="radar-chart"></a-icon><span>关键词查看</span></a-menu-item>
                     <a-menu-item key="3" @click="switch_page('/member/keyword/manage')"><a-icon type="database"></a-icon><span>关键词管理</span></a-menu-item>
                     <a-menu-item key="4" @click="showModal"><a-icon type="plus-circle"></a-icon><span>关键词添加</span></a-menu-item>
@@ -24,7 +24,7 @@
             <a-layout-header style="background: #fff; padding: 0">
                 <a-icon class="trigger" :type="collapsed ? 'menu-unfold' : 'menu-fold'" @click="()=> collapsed = !collapsed"/>
             </a-layout-header>
-            <a-layout-content :style="{ margin: '24px 16px', padding: '24px', background: '#fff', minHeight: '280px' }">
+            <a-layout-content :style="{ margin: '24px 16px', padding: '24px', background: '#fff' }">
                 <iframe :src="current.page"></iframe>
             </a-layout-content>
         </a-layout>
@@ -58,7 +58,7 @@
                 visible: false,
                 collapsed: false,
                 current: {
-                    page: "/member/keyword/manage",
+                    page: "/member/account/home",
                 },
                 filters: ""
             }
@@ -66,7 +66,8 @@
         //初始化
         mounted() {
             this.form = this.$form.createForm(this),
-            this.get()
+            this.get(),
+            this.openNotification();
         },
         //方法
         methods: {
@@ -85,14 +86,17 @@
                         axios.post("/member/manage/add",values).then(function (response) {
                             if (response.status){
                                 app.$message.loading('保存中..', 1)
-                                    .then(() => app.$message.success(response.data.message, 2.5))
-                                this.form.resetFields();
-                                this.visible = false;
+                                    .then(() => app.$message.success(response.data.message, 2.5));
                             }else{
                                 app.$message.loading('保存中..', 1)
                                     .then(() => app.$message.info(response.data.message, 2.5))
                             }
-                        }).catch()
+                        }).catch(
+                            app.$message.loading('保存中..', 1)
+                                .then(() => app.$message.info(response.data.message, 2.5))
+                        )
+                        app.form.resetFields();
+                        app.visible = false;
                     }
                 });
             },
@@ -102,7 +106,16 @@
                         app.filters = response.data;
                     }
                 }).catch()
-            }
+            },
+            openNotification () {
+                this.$notification.open({
+                    message: '词盘：欢迎回来',
+                    description: '上次登陆：2019-8-8 23:55:05',
+                    onClick: () => {
+                        console.log('Notification Clicked!');
+                    },
+                });
+            },
         },
     })
 </script>
@@ -126,6 +139,9 @@
     }
 </style>
 <style>
+    .ant-layout-content {
+        min-height: auto;!important;
+    }
     #components-layout-demo-custom-trigger .trigger {
         font-size: 18px;
         line-height: 64px;

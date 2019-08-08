@@ -8,6 +8,8 @@ use think\Model;
 
 class Dict extends Model
 {
+    protected $autoWriteTimestamp = 'datetime';
+    protected $updateTime = false;
     public function getTypesAttr($value,$data)
     {
         $type = Type::all();

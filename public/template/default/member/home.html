@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Cable-member</title>
+    <script src="/{$Think.Config.template.view_path}assets/js/vue.js"></script>
+    <link rel="stylesheet" href="/{$Think.Config.template.view_path}assets/css/antd.min.css">
+    <script src="/{$Think.Config.template.view_path}assets/js/axios.min.js"></script>
+    <script src="/{$Think.Config.template.view_path}assets/js/antd.min.js"></script>
+</head>
+<body>
+<div id="app">
+    <a-card title="数据统计">
+        <a-card-grid v-for="item in data" style="width:25%;textAlign:'center'">{{item.name}}({{item.number}})</a-card-grid>
+    </a-card>
+</div>
+</body>
+<script>
+    var app = new Vue({
+        el: "#app",
+        data() {
+            return {
+                data: []
+            }
+        },
+        mounted() {
+            this.fetch();
+        },
+        methods: {
+            fetch () {
+                axios.post('/member/account/types',)
+                    .then(function (response) {
+                        app.data = response.data;
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            },
+        },
+    })
+</script>
+</html>

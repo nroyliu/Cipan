@@ -1,6 +1,7 @@
 <?php
 namespace app\member\controller;
 
+use app\model\Dict;
 use app\model\Type;
 use app\model\User;
 use think\Controller;
@@ -9,6 +10,20 @@ use think\Session;
 
 class account extends Controller
 {
+    public function types(Request $request){
+        if ($request->isPost()){
+            $typeModel = Type::all();
+            $types = array();
+            foreach ($typeModel as $item){
+                $number = Dict::where("type", $item->id)->count();
+                $types[] = ["name" =>$item->name, "number" =>$number];
+            }
+            return json_encode($types);
+        }
+    }
+    public function home(){
+        return $this->fetch("/member/home");
+    }
     public function index(){
         return $this->fetch("/member/index");
     }

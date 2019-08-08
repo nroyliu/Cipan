@@ -16,7 +16,7 @@ class Manage extends Controller
     public function get(Request $request){
         if ($request->isPost()){
             $User = Session::get("Cipan_Auth");
-            $list = Dict::where("uid",$User->id)->select();
+            $list = Dict::where("uid",$User->id)->order('create_time',"desc")->select();
             $type = Type::select();
             $filters = array();
             foreach ($type as $item){
