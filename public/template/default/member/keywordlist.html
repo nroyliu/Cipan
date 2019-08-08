@@ -10,7 +10,7 @@
 </head>
 <body>
 <div id="app">
-    <a-table :columns="columns" :row-key="record => record.id" :data-source="data" :pagination="pagination" :loading="loading" @change="handleTableChange">
+    <a-table :columns="columns" :row-key="record => record.id" :data-source="data" :pagination="pagination" :loading="loading" @change="handleTableChange" bordered>
 
     </a-table>
 </div>

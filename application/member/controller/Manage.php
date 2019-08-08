@@ -41,4 +41,19 @@ class Manage extends Controller
             }
         }
     }
+    public function add(Request $request){
+        if ($request->isPost()){
+            $User = Session::get("Cipan_Auth");
+            $data = $request->param();
+            $data['uid'] = $User->id;
+            $dictModel = new Dict($data);
+            $result = $dictModel->allowField(['name','description','type','uid'])->save();
+            if ($result){
+                return json_encode(["status" => 1, "message" => "添加成功"]);
+            }else{
+                return json_encode(["status" => 0, "message" => "添加失败"]);
+
+            }
+        }
+    }
 }

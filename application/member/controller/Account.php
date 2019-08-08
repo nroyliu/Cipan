@@ -1,6 +1,7 @@
 <?php
 namespace app\member\controller;
 
+use app\model\Type;
 use app\model\User;
 use think\Controller;
 use think\Request;
@@ -24,6 +25,17 @@ class account extends Controller
             }else{
                 return json_encode(["status" => 0, "messages" => "账号或密码错误"],JSON_UNESCAPED_UNICODE);
             }
+        }
+
+    }
+    public function gettype(Request $request){
+        if ($request->isPost()){
+            $type = Type::select();
+            $filters = array();
+            foreach ($type as $item){
+                $filters[] = array("id" => $item->id, "value" => $item->name);
+            }
+            return json_encode($filters,JSON_UNESCAPED_UNICODE);
         }
 
     }

@@ -5,6 +5,7 @@
     <title>dict-member</title>
     <script src="/{$Think.Config.template.view_path}assets/js/vue.js"></script>
     <link rel="stylesheet" href="/{$Think.Config.template.view_path}assets/css/antd.min.css">
+    <script src="/{$Think.Config.template.view_path}assets/js/axios.min.js"></script>
     <script src="/{$Think.Config.template.view_path}assets/js/antd.min.js"></script>
 </head>
 <body>
@@ -14,8 +15,9 @@
             <div class="logo"></div>
             <a-menu theme="light" mode="inline" :default-selected-keys="['1']">
                     <a-menu-item key="1" @click="switch_page('/member/account/index')"><a-icon type="user"></a-icon><span>用户中心</span></a-menu-item>
-                    <a-menu-item key="2" @click="switch_page('/member/keyword/getlist')"><a-icon type="book"></a-icon><span>关键词查看</span></a-menu-item>
-                    <a-menu-item key="3" @click="switch_page('/member/keyword/manage')"><a-icon type="book"></a-icon><span>关键词管理</span></a-menu-item>
+                    <a-menu-item key="2" @click="switch_page('/member/keyword/getlist')"><a-icon type="radar-chart"></a-icon><span>关键词查看</span></a-menu-item>
+                    <a-menu-item key="3" @click="switch_page('/member/keyword/manage')"><a-icon type="database"></a-icon><span>关键词管理</span></a-menu-item>
+                    <a-menu-item key="4" @click="showModal"><a-icon type="plus-circle"></a-icon><span>关键词添加</span></a-menu-item>
             </a-menu>
         </a-layout-sider>
         <a-layout>
@@ -26,6 +28,24 @@
                 <iframe :src="current.page"></iframe>
             </a-layout-content>
         </a-layout>
+        <div>
+
+            <a-modal :visible="visible" title='添加关键词' cancel-text="取消" ok-text='确定' @cancel="handleCancel" @ok="handleCreate">
+                <a-form layout='vertical' :form="form">
+                    <a-form-item label='分类'>
+                        <a-select v-decorator="['type',{rules: [{ required: true, message: '分类不能为空!' }]}]">
+                            <a-select-option v-for="item in filters" :value="item.id">{{item.value}}</a-select-option>
+                        </a-select>
+                    </a-form-item>
+                    <a-form-item label='关键词'>
+                        <a-input v-decorator="['name', {rules: [{ required: true, message: '关键词不能为空!' }],}]"/>
+                    </a-form-item>
+                    <a-form-item label='描述'>
+                        <a-input type='textarea' v-decorator="['description', {rules: [{ required: true, message: '描述内容不可为空!' }],}]"/>
+                    </a-form-item>
+                </a-form>
+            </a-modal>
+        </div>
     </a-layout>
 </div>
 </body>
@@ -34,21 +54,54 @@
         el: "#app",
         data() {
             return {
-                rootSubmenuKeys: ['sub1', 'sub2', 'sub3'],
-                openKeys: ['sub1'],
+                form: null,
+                visible: false,
                 collapsed: false,
                 current: {
                     page: "/member/keyword/manage",
-                }
+                },
+                filters: ""
             }
         },
         //初始化
         mounted() {
+            this.form = this.$form.createForm(this),
+            this.get()
         },
         //方法
         methods: {
             switch_page(page) {
                 this.current.page = page;
+            },
+            showModal () {
+                this.visible = true;
+            },
+            handleCancel  () {
+                this.visible = false;
+            },
+            handleCreate  () {
+                this.form.validateFields((err, values) => {
+                    if (!err) {
+                        axios.post("/member/manage/add",values).then(function (response) {
+                            if (response.status){
+                                app.$message.loading('保存中..', 1)
+                                    .then(() => app.$message.success(response.data.message, 2.5))
+                                this.form.resetFields();
+                                this.visible = false;
+                            }else{
+                                app.$message.loading('保存中..', 1)
+                                    .then(() => app.$message.info(response.data.message, 2.5))
+                            }
+                        }).catch()
+                    }
+                });
+            },
+            get() {
+                axios.post("/member/account/gettype").then(function (response) {
+                    if (response.status){
+                        app.filters = response.data;
+                    }
+                }).catch()
             }
         },
     })
