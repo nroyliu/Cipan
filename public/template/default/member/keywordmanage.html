@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Cable-member</title>
+    <script src="/{$Think.Config.template.view_path}assets/js/vue.js"></script>
+    <link rel="stylesheet" href="/{$Think.Config.template.view_path}assets/css/antd.min.css">
+    <script src="/{$Think.Config.template.view_path}assets/js/antd.min.js"></script>
+</head>
+<body>
+<div id="app">
+    <a-table :columns="columns" :data-source="data" bordered>
+        <template v-for="col in ['name', 'age', 'address']" :slot="col" slot-scope="text, record, index">
+            <div :key="col">
+                <a-col v-if="record.editable != true">{{text}}</a-col>
+                <a-input v-if="record.editable === true" style="margin: -5px 0" :value="text" @change="e => handleChange(e.target.value, record.key, col)"/>
+            </div>
+        </template>
+        <template slot="operation" slot-scope="text, record, index">
+            <div class='editable-row-operations'>
+        <span v-if="record.editable">
+          <a @click="() => save(record.key)">Save</a>
+          <a-popconfirm title='Sure to cancel?' @confirm="() => cancel(record.key)">
+            <a>Cancel</a>
+          </a-popconfirm>
+        </span>
+                <span v-else>
+          <a @click="() => edit(record.key)">Edit</a>
+        </span>
+            </div>
+        </template>
+    </a-table>
+</div>
+</body>
+<script>
+    const columns = [{
+        title: 'name',
+        dataIndex: 'name',
+        width: '25%',
+        scopedSlots: { customRender: 'name' },
+    }, {
+        title: 'age',
+        dataIndex: 'age',
+        width: '15%',
+        scopedSlots: { customRender: 'age' },
+    }, {
+        title: 'address',
+        dataIndex: 'address',
+        width: '40%',
+        scopedSlots: { customRender: 'address' },
+    }, {
+        title: 'operation',
+        dataIndex: 'operation',
+        scopedSlots: { customRender: 'operation' },
+    }]
+
+    const data = []
+    for (let i = 0; i < 100; i++) {
+        data.push({
+            key: i.toString(),
+            name: `Edrward ${i}`,
+            age: 32,
+            address: `London Park no. ${i}`,
+        })
+    }
+    var app = new Vue({
+        el: "#app",
+        data() {
+            this.cacheData = data.map(item => ({ ...item }))
+            return {
+                data,
+                columns,
+            }
+        },
+        //初始化
+        mounted() {
+        },
+        //方法
+        methods: {
+            handleChange (value, key, column) {
+                const newData = [...this.data]
+                const target = newData.filter(item => key === item.key)[0]
+                if (target) {
+                    target[column] = value
+                    this.data = newData
+                }
+            },
+            edit (key) {
+                const newData = [...this.data]
+                const target = newData.filter(item => key === item.key)[0]
+                if (target) {
+                    target.editable = true
+                    this.data = newData
+                }
+            },
+            save (key) {
+                const newData = [...this.data]
+                console.log(newData);
+                const target = newData.filter(item => key === item.key)[0]
+                if (target) {
+                    delete target.editable
+                    this.data = newData
+                    this.cacheData = newData.map(item => ({ ...item }))
+                }
+            },
+            cancel (key) {
+                const newData = [...this.data]
+                const target = newData.filter(item => key === item.key)[0]
+                if (target) {
+                    Object.assign(target, this.cacheData.filter(item => key === item.key)[0])
+                    delete target.editable
+                    this.data = newData
+                }
+            },
+        },
+    })
+</script>
+<style>
+    #components-layout-demo-custom-trigger .trigger {
+        font-size: 18px;
+        line-height: 64px;
+        padding: 0 24px;
+        cursor: pointer;
+        transition: color .3s;
+    }
+
+    #components-layout-demo-custom-trigger .trigger:hover {
+        color: #1890ff;
+    }
+
+    #components-layout-demo-custom-trigger .logo {
+        height: 32px;
+        background: rgba(255,255,255,.2);
+        margin: 16px;
+    }
+</style>
+<style>
+    #components-layout-demo-custom-trigger .trigger {
+        font-size: 18px;
+        line-height: 64px;
+        padding: 0 24px;
+        cursor: pointer;
+        transition: color .3s;
+    }
+
+    #components-layout-demo-custom-trigger .trigger:hover {
+        color: #1890ff;
+    }
+
+    #components-layout-demo-custom-trigger .logo {
+        height: 32px;
+        background: rgba(255,255,255,.2);
+        margin: 16px;
+    }
+    #components-layout-demo-custom-trigger {
+        height: 100vh;
+    }
+</style>
+<style>
+    body{
+        overflow: hidden;
+    }
+</style>
+</html>

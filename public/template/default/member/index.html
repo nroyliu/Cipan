@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Cable-member</title>
+    <title>dict-member</title>
     <script src="/{$Think.Config.template.view_path}assets/js/vue.js"></script>
     <link rel="stylesheet" href="/{$Think.Config.template.view_path}assets/css/antd.min.css">
     <script src="/{$Think.Config.template.view_path}assets/js/antd.min.js"></script>
@@ -12,10 +12,10 @@
     <a-layout id="components-layout-demo-custom-trigger">
         <a-layout-sider :trigger="null" collapsible v-model="collapsed" style="background: rgb(255,255,255)">
             <div class="logo"></div>
-            <a-menu theme="light" mode="inline" :default-selected-keys="['1']" @open-change="onOpenChange">
-                    <a-menu-item key="1"><a-icon type="user"></a-icon><span>用户中心</span></a-menu-item>
-                    <a-menu-item key="2"><a-icon type="book"></a-icon><span>关键词查看</span></a-menu-item>
-                    <a-menu-item key="3"><a-icon type="book"></a-icon><span>关键词管理</span></a-menu-item>
+            <a-menu theme="light" mode="inline" :default-selected-keys="['1']">
+                    <a-menu-item key="1" @click="switch_page('/member/account/index')"><a-icon type="user"></a-icon><span>用户中心</span></a-menu-item>
+                    <a-menu-item key="2" @click="switch_page('/member/keyword/getlist')"><a-icon type="book"></a-icon><span>关键词查看</span></a-menu-item>
+                    <a-menu-item key="3" @click="switch_page('/member/keyword/manage')"><a-icon type="book"></a-icon><span>关键词管理</span></a-menu-item>
             </a-menu>
         </a-layout-sider>
         <a-layout>
@@ -23,7 +23,7 @@
                 <a-icon class="trigger" :type="collapsed ? 'menu-unfold' : 'menu-fold'" @click="()=> collapsed = !collapsed"/>
             </a-layout-header>
             <a-layout-content :style="{ margin: '24px 16px', padding: '24px', background: '#fff', minHeight: '280px' }">
-                Content
+                <iframe :src="current.page"></iframe>
             </a-layout-content>
         </a-layout>
     </a-layout>
@@ -37,9 +37,9 @@
                 rootSubmenuKeys: ['sub1', 'sub2', 'sub3'],
                 openKeys: ['sub1'],
                 collapsed: false,
-                nav:{
-                    current: ['bill']
-                },
+                current: {
+                    page: "/member/keyword/manage",
+                }
             }
         },
         //初始化
@@ -47,15 +47,9 @@
         },
         //方法
         methods: {
-            onOpenChange (openKeys) {
-                console.log("1");
-                const latestOpenKey = openKeys.find(key => this.openKeys.indexOf(key) === -1)
-                if (this.rootSubmenuKeys.indexOf(latestOpenKey) === -1) {
-                    this.openKeys = openKeys
-                } else {
-                    this.openKeys = latestOpenKey ? [latestOpenKey] : []
-                }
-            },
+            switch_page(page) {
+                this.current.page = page;
+            }
         },
     })
 </script>
@@ -103,6 +97,11 @@
 <style>
     body{
         overflow: hidden;
+    }
+    iframe{
+        width: 100%;
+        height: 100vh;
+        border: none;
     }
 </style>
 </html>
