@@ -10,7 +10,7 @@ class Index extends  Controller
     {
         $isLogin = Session::get("Cipan_Auth");
         if (!is_null($isLogin)){
-            echo "已登录";
+            header("location:/member/account");
         }
         return $this->fetch("/index");
     }

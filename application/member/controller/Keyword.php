@@ -8,9 +8,8 @@ use app\model\Dict;
 use app\model\Type;
 use think\Controller;
 use think\Request;
-use think\response\Json;
 
-class Keyword extends Controller
+class Keyword extends Base
 {
     public function getlist(){
         return $this->fetch("/member/keywordlist");

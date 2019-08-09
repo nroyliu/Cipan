@@ -6,12 +6,11 @@ namespace app\member\controller;
 
 use app\model\Dict;
 use app\model\Type;
-use think\console\command\make\Model;
 use think\Controller;
 use think\Request;
 use think\Session;
 
-class Manage extends Controller
+class Manage extends Base
 {
     public function get(Request $request){
         if ($request->isPost()){

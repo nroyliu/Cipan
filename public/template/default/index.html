@@ -12,16 +12,16 @@
 <div id="app">
     <div class="login-card">
         <div align="middle">
-            <h1>log in Cable</h1>
-            <p>welcome</p>
+            <h1>登陆词盘</h1>
+            <p>Let's get started</p>
         </div>
         <a-form :form="form" @submit="handleSubmit">
             <a-form-item label="" :label-col="{span: 5}" :wrapper-col="{ span: 24 }" :validate-status="email_valid" :help="valid_text">
-                <a-input v-decorator="['username',{rules: [{ required: true, message: 'Please input your username!' }]}]"/>
+                <a-input v-decorator="['username',{rules: [{ required: true, message: '请输入用户名!' }]}]"/>
                 <a-icon slot="prefix" type="user" style="color: rgba(0,0,0,.25)"/>
             </a-form-item>
             <a-form-item label="" :label-col="{span: 5}" :wrapper-col="{ span: 24 }">
-                <a-input v-decorator="['password',{rules: [{ required: true, message: 'Please input your password!' }]}]" type="password"/>
+                <a-input v-decorator="['password',{rules: [{ required: true, message: '请输入密码!' }]}]" type="password"/>
                 <a-icon slot="prefix" type="lock" style="color: rgba(0,0,0,.25)"/>
             </a-form-item>
             <a-form-item :wrapper-col="{ span: 24, offset: 0 }">
@@ -62,7 +62,7 @@
                         formData.append('username', values['username']);
                         formData.append('password', values['password']);
                         console.log(formData);
-                        axios.post('/member/account/login', {
+                        axios.post('/member/user/login', {
                             'username': values['username'],
                             'password': values['password']
                         })
@@ -80,26 +80,6 @@
                             .catch(function (error) {
                                 console.log(error);
                             });
-                        // $.ajax({
-                        //     url: 'interact/login.php',
-                        //     type: "POST",
-                        //     data: formData,
-                        //     cache: false,
-                        //     dataType: 'json',
-                        //     processData: false,
-                        //     contentType: false,
-                        //     success: function (data) {
-                        //         if (data.status) {
-                        //             antd.email_valid = 'success';
-                        //             antd.valid_text = null;
-                        //             cookie.set('logged_in_id',parseInt(data.user_id));
-                        //             window.location.href = 'pro';
-                        //         } else {
-                        //             antd.email_valid = 'error';
-                        //             antd.valid_text = data.mes;
-                        //         }
-                        //     }
-                        // });
                     } else {
                         this.email_valid = 'warning';
                         this.valid_text = 'Incorrect email or password';
